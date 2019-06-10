@@ -2,14 +2,12 @@
 
 [ ! -z "$DEBUG" ] && set -ex
 
-# Themes
-#       label  panel_size  wm_theme     cursor_size  dpi
-SMALL=( small  32          Numix        16           96 )
-BIG=(   big   48           "Numix-154"  42           144 )
-
 DEFAULT=small
 DIRNAME=$(dirname "$0")
 LAST_STATE_PATH="$DIRNAME/last-state"
+
+# shellcheck source=themes.bash
+source "$DIRNAME/themes.bash"
 
 _set() {
   local label=$1; shift
