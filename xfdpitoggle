@@ -1,0 +1,18 @@
+#!/bin/bash -ex
+
+dirname=$(dirname "$0")
+last=$(cat "$dirname/xfdpilast")
+
+case "$last" in
+  xfdpilo)
+    "$dirname/xfdpihi"
+    ;;
+  xfdpihi)
+    "$dirname/xfdpilo"
+    ;;
+  *)
+    default=xfdpihi
+    echo "Unknown lastdpi '$last'. Going with $default"
+    "$dirname/$default"
+    exit 1
+esac

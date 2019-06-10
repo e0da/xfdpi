@@ -1,0 +1,7 @@
+#!/bin/bash -ex
+
+xfconf-query -c xfwm4 -p /general/theme -s "Numix"
+xfconf-query -c xsettings -p /Gtk/CursorThemeSize -s 16
+xfconf-query -c xsettings -p /Xft/DPI -s 96
+
+echo xfdpihi > "$(dirname "$0")/xfdpilast"
