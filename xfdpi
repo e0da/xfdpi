@@ -1,0 +1,70 @@
+#!/bin/bash
+
+[ ! -z "$DEBUG" ] && set -ex
+
+# Themes
+#       label  panel_size  wm_theme     cursor_size  dpi
+SMALL=( small  32          Numix        16           96 )
+BIG=(   big   48           "Numix-154"  42           144 )
+
+DEFAULT=small
+DIRNAME=$(dirname "$0")
+LAST_STATE_PATH="$DIRNAME/last-state"
+
+_set() {
+  local label=$1; shift
+  local panel_size=$1; shift
+  local wm_theme=$1; shift
+  local cursor_size=$1; shift
+  local dpi=$1; shift
+  set -ex
+  xfconf-query -c xfce4-panel -p /panels/panel-1/size -s "$panel_size"
+  xfconf-query -c xfwm4 -p /general/theme -s "$wm_theme"
+  xfconf-query -c xsettings -p /Gtk/CursorThemeSize -s "$cursor_size"
+  xfconf-query -c xsettings -p /Xft/DPI -s "$dpi"
+  echo "$label" > "$LAST_STATE_PATH"
+}
+
+_small() {
+  _set "${SMALL[@]}"
+}
+
+_big() {
+  _set "${BIG[@]}"
+}
+
+_default() {
+  local last_state
+  last_state=$(cat "$LAST_STATE_PATH" || echo "$DEFAULT")
+  case "$last_state" in
+    big)
+      _small
+      ;;
+    small)
+      _big
+      ;;
+    *)
+      echo "Unknown $LAST_STATE_PATH value '$last_state'. Going with $DEFAULT"
+      "_$DEFAULT"
+      exit 1
+  esac
+}
+
+_help() {
+  echo "Usage: $0 [SIZE]"
+  echo "SIZE can be big, small, or ommitted to toggle between big and small"
+}
+
+case "$1" in
+  -h|--help)
+    _help
+    ;;
+  big)
+    _big
+  ;;
+  small)
+    _small
+  ;;
+  *)
+    _default
+esac
