@@ -12,11 +12,13 @@ source "$DIRNAME/themes.bash"
 _set() {
   local label=$1; shift
   local panel_size=$1; shift
+  local tray_icon_size=$1; shift
   local wm_theme=$1; shift
   local cursor_size=$1; shift
   local dpi=$1; shift
   set -ex
   xfconf-query -c xfce4-panel -p /panels/panel-1/size -s "$panel_size"
+  xfconf-query -c xfce4-panel -p /plugins/plugin-6/size-max -s "$tray_icon_size"
   xfconf-query -c xfwm4 -p /general/theme -s "$wm_theme"
   xfconf-query -c xsettings -p /Gtk/CursorThemeSize -s "$cursor_size"
   xfconf-query -c xsettings -p /Xft/DPI -s "$dpi"
